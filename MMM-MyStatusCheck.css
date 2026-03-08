@@ -1,0 +1,11 @@
+.myStatusWrapper {
+    font-size: 20px;
+}
+
+.status.online {
+    color: #00ff00;
+}
+
+.status.offline {
+    color: #ff4444;
+}

@@ -1,0 +1,7 @@
+{
+  "name": "mmm-mystatuscheck",
+  "version": "1.0.0",
+  "description": "MagicMirror module to ping a host and check if it is alive",
+  "main": "MMM-MyStatusCheck.js",
+  "dependencies": {}
+}

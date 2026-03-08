@@ -1,7 +1,7 @@
 Module.register("MMM-MyStatusCheck", {
 
     defaults: {
-        host: "192.168.1.1",
+        host: "192.168.0.1",
         label: "Server",
         interval: 10000
     },

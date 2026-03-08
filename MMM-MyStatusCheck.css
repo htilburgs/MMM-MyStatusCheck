@@ -1,34 +1,47 @@
-.statusContainer {
+.dashboardGrid {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    font-size: 20px;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start;
 }
 
-.systemWrapper {
+.dashboardItem {
     display: flex;
+    flex-direction: column;
     align-items: center;
+    width: 100px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgba(0,0,0,0.3);
+    transition: transform 0.2s;
 }
+
+.dashboardItem:hover {
+    transform: scale(1.05);
+}
+
+.statusIcon {
+    font-size: 50px;
+    margin-bottom: 8px;
+}
+
+.statusIcon.online { color: #00ff00; }
+.statusIcon.offline { color: #ff4444; }
+.statusIcon.checking { color: #ffa500; animation: spin 1s linear infinite; }
 
 .systemLabel {
     font-weight: bold;
-    margin-right: 5px;
+    text-align: center;
+    margin-bottom: 4px;
 }
 
-.status.online {
-    color: #00ff00;
+.latency {
+    font-size: 14px;
+    color: #cccccc;
+    text-align: center;
 }
 
-.status.offline {
-    color: #ff4444;
-}
-
-.status.checking {
-    color: #ffa500;
-    animation: spin 1s linear infinite;
-}
-
-/* Spinner animation for "checking" icon */
+/* Spinner animation for checking icon */
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }

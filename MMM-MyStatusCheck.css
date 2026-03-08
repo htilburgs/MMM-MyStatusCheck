@@ -1,5 +1,18 @@
-.myStatusWrapper {
-    font-size: 20px;
+.statusContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 18px;
+}
+
+.systemWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.systemLabel {
+    font-weight: bold;
+    margin-right: 5px;
 }
 
 .status.online {
@@ -8,4 +21,8 @@
 
 .status.offline {
     color: #ff4444;
+}
+
+.status.checking {
+    color: #ffa500;
 }

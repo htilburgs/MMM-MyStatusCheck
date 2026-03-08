@@ -24,39 +24,36 @@ Module.register("MMM-MyStatusCheck", {
 
     getDom: function () {
         const wrapper = document.createElement("div");
-        wrapper.className = "statusContainer";
+        wrapper.className = "dashboardGrid";
 
         this.config.systems.forEach(system => {
-            const systemWrapper = document.createElement("div");
-            systemWrapper.className = "systemWrapper";
+            const item = document.createElement("div");
+            item.className = "dashboardItem";
+
+            // Icon
+            const icon = document.createElement("div");
+            icon.className = "statusIcon";
+            const s = this.statuses[system.host] || { state: "checking", latency: null };
+            if (s.state === "online") icon.innerHTML = "✅";
+            else if (s.state === "offline") icon.innerHTML = "❌";
+            else icon.innerHTML = "⏳";
 
             // Label
-            const label = document.createElement("span");
+            const label = document.createElement("div");
             label.className = "systemLabel";
-            label.innerHTML = system.label + ": ";
+            label.innerHTML = system.label;
 
-            // Status icon
-            const status = document.createElement("span");
-            const s = this.statuses[system.host] || { state: "checking", latency: null };
-            status.className = "status " + s.state;
-
-            if (this.config.showIcon) {
-                if (s.state === "online") status.innerHTML = "✅";
-                else if (s.state === "offline") status.innerHTML = "❌";
-                else status.innerHTML = "⏳";
-                if (this.config.showLatency && s.latency != null) {
-                    status.innerHTML += ` ${s.latency}ms`;
-                }
-            } else {
-                status.innerHTML = s.state.toUpperCase();
-                if (this.config.showLatency && s.latency != null) {
-                    status.innerHTML += ` (${s.latency}ms)`;
-                }
+            // Latency
+            const latency = document.createElement("div");
+            latency.className = "latency";
+            if (this.config.showLatency && s.latency != null) {
+                latency.innerHTML = s.latency + " ms";
             }
 
-            systemWrapper.appendChild(label);
-            systemWrapper.appendChild(status);
-            wrapper.appendChild(systemWrapper);
+            item.appendChild(icon);
+            item.appendChild(label);
+            item.appendChild(latency);
+            wrapper.appendChild(item);
         });
 
         return wrapper;

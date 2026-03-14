@@ -2,16 +2,16 @@ Module.register("MMM-MyStatusCheck", {
 
     defaults: {
         systems: [
-            { host: "192.168.0.1", label: "Unify Router", type: "ping",
+            { host: "192.168.0.1", label: "Unify Router", type: "ping", icon: "fas fa-server",
               colors: { online: "green", offline: "red", checking: "orange" } 
             },
-            { host: "192.168.0.10", label: "Synology NAS", type: "ping",
+            { host: "192.168.0.10", label: "Synology NAS", type: "ping", icon: "fas fa-hdd",
               colors: { online: "green", offline: "red", checking: "orange" } 
             },
-            { host: "192.168.0.100", label: "DHCP Server", type: "ping",
+            { host: "192.168.0.100", label: "DHCP Server", type: "ping", icon: "fas fa-database",
               colors: { online: "green", offline: "red", checking: "orange" } 
             },
-            { host: "http://www.tilburgs.com", label: "TILBURGS", type: "http",
+            { host: "http://www.tilburgs.com", label: "TILBURGS", type: "http", icon: "fas fa-globe",
               colors: { online: "green", offline: "red", checking: "orange" } 
             }
         ],
@@ -50,18 +50,24 @@ Module.register("MMM-MyStatusCheck", {
             labelDiv.textContent = system.label || "";
             row.appendChild(labelDiv);
 
-            // Middle column: icon (same for online/offline)
+            // Middle column: icon
             const iconDiv = document.createElement("div");
             iconDiv.className = "statusIcon";
+
             if (this.config.showIcon) {
-                let iconClass = "fas fa-server"; // same for online/offline
-                if (state === "checking") iconClass = "fas fa-spinner fa-spin";
+                let iconClass;
+                if (state === "checking") {
+                    iconClass = "fas fa-spinner fa-spin"; // always spinner when checking
+                } else {
+                    iconClass = system.icon || "fas fa-server"; // configurable icon for online/offline
+                }
 
                 iconDiv.innerHTML = `<i class="${iconClass}"></i>`;
                 const color = (system.colors && system.colors[state]) || "#ffffff";
                 const iconEl = iconDiv.querySelector("i");
                 if (iconEl) iconEl.style.color = color;
             }
+
             row.appendChild(iconDiv);
 
             // Right column: latency

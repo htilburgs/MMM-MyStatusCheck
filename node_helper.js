@@ -1,8 +1,6 @@
 const NodeHelper = require("node_helper");
-const ping = require("ping"); // Node dependency (no OS ping needed)
-const https = require("https");
-const http = require("http");
-const url = require("url");
+const ping = require("ping");
+const axios = require("axios");
 
 module.exports = NodeHelper.create({
 
@@ -19,9 +17,8 @@ module.exports = NodeHelper.create({
     },
 
     schedule: function () {
-        const self = this;
         setInterval(() => {
-            self.checkAll();
+            this.checkAll();
         }, this.config.interval);
     },
 
@@ -37,49 +34,35 @@ module.exports = NodeHelper.create({
 
     pingHost: function (host) {
         const start = Date.now();
-        ping.promise.probe(host, {
-            timeout: 3
-        }).then(res => {
-            const latency = res.alive ? Date.now() - start : null;
-            this.sendSocketNotification("STATUS_RESULT", {
-                host: host,
-                alive: res.alive,
-                latency: latency
-            });
-        }).catch(() => {
-            this.sendSocketNotification("STATUS_RESULT", {
-                host: host,
-                alive: false,
-                latency: null
-            });
-        });
-    },
-
-    httpCheck: function (hostUrl) {
-        try {
-            const start = Date.now();
-            const parsedUrl = url.parse(hostUrl);
-            const lib = parsedUrl.protocol === 'https:' ? https : http;
-
-            const req = lib.get(parsedUrl, (res) => {
-                const latency = Date.now() - start;
-                const alive = res.statusCode >= 200 && res.statusCode < 400;
+        ping.promise.probe(host, { timeout: 3 })
+            .then(res => {
+                const latency = res.alive ? Date.now() - start : null;
                 this.sendSocketNotification("STATUS_RESULT", {
-                    host: hostUrl,
-                    alive: alive,
-                    latency: latency
+                    host,
+                    alive: res.alive,
+                    latency
                 });
-            });
-
-            req.on('error', () => {
+            })
+            .catch(() => {
                 this.sendSocketNotification("STATUS_RESULT", {
-                    host: hostUrl,
+                    host,
                     alive: false,
                     latency: null
                 });
             });
+    },
 
-            req.setTimeout(5000, () => req.abort());
+    httpCheck: async function (hostUrl) {
+        const start = Date.now();
+        try {
+            const res = await axios.get(hostUrl, { timeout: 5000 });
+            const latency = Date.now() - start;
+            const alive = res.status >= 200 && res.status < 400;
+            this.sendSocketNotification("STATUS_RESULT", {
+                host: hostUrl,
+                alive,
+                latency
+            });
         } catch (e) {
             this.sendSocketNotification("STATUS_RESULT", {
                 host: hostUrl,

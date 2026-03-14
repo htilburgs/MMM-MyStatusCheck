@@ -3,16 +3,16 @@ Module.register("MMM-MyStatusCheck", {
     defaults: {
         systems: [
             { host: "192.168.0.1", label: "Unify Router", type: "ping", icon: "fas fa-server",
-              colors: { online: "green", offline: "red", checking: "orange" } 
+              colors: { online: "#00ff00", offline: "#ff4444", checking: "#ffaa00" }
             },
             { host: "192.168.0.10", label: "Synology NAS", type: "ping", icon: "fas fa-hdd",
-              colors: { online: "green", offline: "red", checking: "orange" } 
+              colors: { online: "#00ff00", offline: "#ff4444", checking: "#ffaa00" }
             },
             { host: "192.168.0.100", label: "DHCP Server", type: "ping", icon: "fas fa-database",
-              colors: { online: "green", offline: "red", checking: "orange" } 
+              colors: { online: "green", offline: "red", checking: "orange" }
             },
             { host: "http://www.tilburgs.com", label: "TILBURGS", type: "http", icon: "fas fa-globe",
-              colors: { online: "green", offline: "red", checking: "orange" } 
+              colors: { online: "green", offline: "red", checking: "orange" }
             }
         ],
         interval: 15000,
@@ -53,13 +53,14 @@ Module.register("MMM-MyStatusCheck", {
             // Middle column: icon
             const iconDiv = document.createElement("div");
             iconDiv.className = "statusIcon";
-
             if (this.config.showIcon) {
                 let iconClass;
                 if (state === "checking") {
-                    iconClass = "fas fa-spinner fa-spin"; // always spinner when checking
+                    // Spinner is always the same
+                    iconClass = "fas fa-spinner fa-spin";
                 } else {
-                    iconClass = system.icon || "fas fa-server"; // configurable icon for online/offline
+                    // Online/offline icon is configurable and the same
+                    iconClass = system.icon || "fas fa-server";
                 }
 
                 iconDiv.innerHTML = `<i class="${iconClass}"></i>`;
@@ -67,7 +68,6 @@ Module.register("MMM-MyStatusCheck", {
                 const iconEl = iconDiv.querySelector("i");
                 if (iconEl) iconEl.style.color = color;
             }
-
             row.appendChild(iconDiv);
 
             // Right column: latency

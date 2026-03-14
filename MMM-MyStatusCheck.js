@@ -2,19 +2,21 @@ Module.register("MMM-MyStatusCheck", {
 
     defaults: {
         systems: [
-            {
-                host: "192.168.1.100",
-                label: "NAS",
-                type: "ping",
-                icons: { online: "fas fa-server", offline: "fas fa-times-circle", checking: "fas fa-spinner fa-spin" },
-                colors: { online: "green", offline: "red", checking: "orange" }
+            { host: "192.168.0.1", label: "Unify Router", type: "ping",
+              icons: { online: "fas fa-server", offline: "fas fa-times-circle", checking: "fas fa-spinner fa-spin" },
+              colors: { online: "#00ff00", offline: "#ff4444", checking: "#ffaa00" } 
             },
-            {
-                host: "http://example.com",
-                label: "Website",
-                type: "http",
-                icons: { online: "fas fa-globe", offline: "fas fa-exclamation-circle", checking: "fas fa-spinner fa-spin" },
-                colors: { online: "#00aaff", offline: "#ff0000", checking: "#ffaa00" }
+            { host: "192.168.0.10", label: "Synology NAS", type: "ping",
+              icons: { online: "fas fa-server", offline: "fas fa-times-circle", checking: "fas fa-spinner fa-spin" },
+              colors: { online: "#00ff00", offline: "#ff4444", checking: "#ffaa00" } 
+            },
+            { host: "192.168.0.100", label: "DHCP Server", type: "ping",
+              icons: { online: "fas fa-database", offline: "fas fa-times-circle", checking: "fas fa-spinner fa-spin" },
+              colors: { online: "green", offline: "red", checking: "orange" } 
+            },
+            { host: "http://www.tilburgs.com", label: "TILBURGS", type: "http",
+              icons: { online: "fas fa-globe", offline: "fas fa-exclamation-circle", checking: "fas fa-spinner fa-spin" },
+              colors: { online: "green", offline: "red", checking: "orange" } 
             }
         ],
         interval: 15000,
@@ -38,16 +40,20 @@ Module.register("MMM-MyStatusCheck", {
         const wrapper = document.createElement("div");
         wrapper.className = "statusContainer";
 
-        this.config.systems.forEach(system => {
+        const mid = Math.ceil(this.config.systems.length / 2);
+        const leftCol = document.createElement("div");
+        leftCol.className = "statusColumn";
+        const rightCol = document.createElement("div");
+        rightCol.className = "statusColumn";
+
+        this.config.systems.forEach((system, index) => {
             const systemWrapper = document.createElement("div");
             systemWrapper.className = "systemWrapper";
 
-            // Label
             const label = document.createElement("span");
             label.className = "systemLabel";
             label.textContent = system.label + ":";
 
-            // Status icon/text
             const status = document.createElement("span");
             status.className = "status";
 
@@ -74,9 +80,13 @@ Module.register("MMM-MyStatusCheck", {
 
             systemWrapper.appendChild(label);
             systemWrapper.appendChild(status);
-            wrapper.appendChild(systemWrapper);
+
+            if (index < mid) leftCol.appendChild(systemWrapper);
+            else rightCol.appendChild(systemWrapper);
         });
 
+        wrapper.appendChild(leftCol);
+        wrapper.appendChild(rightCol);
         return wrapper;
     },
 

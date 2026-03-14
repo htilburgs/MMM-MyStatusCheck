@@ -1,3 +1,4 @@
+
 Module.register("MMM-MyStatusCheck", {
 
     defaults: {
@@ -6,6 +7,9 @@ Module.register("MMM-MyStatusCheck", {
               colors: { online: "green", offline: "red", checking: "orange" }
             },
             { host: "http://example.com", label: "Website", type: "http", icon: "fas fa-globe",
+              colors: { online: "green", offline: "red", checking: "orange" }
+            },
+            { host: "192.168.0.50", label: "Alice", type: "person", icon: "fas fa-user",
               colors: { online: "green", offline: "red", checking: "orange" }
             }
         ],
@@ -49,13 +53,8 @@ Module.register("MMM-MyStatusCheck", {
             iconDiv.className = "statusIcon";
             if (this.config.showIcon) {
                 let iconClass;
-                if (state === "checking") {
-                    // Spinner is always the same
-                    iconClass = "fas fa-spinner fa-spin";
-                } else {
-                    // Online/offline icon is configurable and the same
-                    iconClass = system.icon || "fas fa-server";
-                }
+                if (state === "checking") iconClass = "fas fa-spinner fa-spin";
+                else iconClass = system.icon || "fas fa-server";
 
                 iconDiv.innerHTML = `<i class="${iconClass}"></i>`;
                 const color = (system.colors && system.colors[state]) || "#ffffff";

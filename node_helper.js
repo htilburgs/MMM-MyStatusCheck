@@ -11,24 +11,19 @@ module.exports = NodeHelper.create({
     socketNotificationReceived: function (notification, config) {
         if (notification === "CONFIG") {
             this.config = config;
-            this.checkAll(); // run immediately
+            this.checkAll();
             this.schedule();
         }
     },
 
     schedule: function () {
-        setInterval(() => {
-            this.checkAll();
-        }, this.config.interval);
+        setInterval(() => { this.checkAll(); }, this.config.interval);
     },
 
     checkAll: function () {
         this.config.systems.forEach(system => {
-            if (system.type === "ping") {
-                this.pingHost(system.host);
-            } else if (system.type === "http") {
-                this.httpCheck(system.host);
-            }
+            if (system.type === "ping") this.pingHost(system.host);
+            else if (system.type === "http") this.httpCheck(system.host);
         });
     },
 

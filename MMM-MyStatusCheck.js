@@ -2,16 +2,10 @@ Module.register("MMM-MyStatusCheck", {
 
     defaults: {
         systems: [
-            { host: "192.168.0.1", label: "Unify Router", type: "ping", icon: "fas fa-server",
-              colors: { online: "#00ff00", offline: "#ff4444", checking: "#ffaa00" }
-            },
-            { host: "192.168.0.10", label: "Synology NAS", type: "ping", icon: "fas fa-hdd",
-              colors: { online: "#00ff00", offline: "#ff4444", checking: "#ffaa00" }
-            },
-            { host: "192.168.0.100", label: "DHCP Server", type: "ping", icon: "fas fa-database",
+            { host: "192.168.0.1", label: "Router", type: "ping", icon: "fas fa-server",
               colors: { online: "green", offline: "red", checking: "orange" }
             },
-            { host: "http://www.tilburgs.com", label: "TILBURGS", type: "http", icon: "fas fa-globe",
+            { host: "http://example.com", label: "Website", type: "http", icon: "fas fa-globe",
               colors: { online: "green", offline: "red", checking: "orange" }
             }
         ],

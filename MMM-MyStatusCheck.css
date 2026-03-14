@@ -7,7 +7,8 @@
 .systemWrapper {
 /*    display: flex;
     padding: 2px 0; /* smaller vertical padding */
-  
+    font-size: 14px;
+    color: white;  
     align-items: center;
     margin: 0;      /* remove extra margin */
 }

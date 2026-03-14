@@ -1,27 +1,27 @@
 .statusContainer {
     display: flex;
-    flex-direction: row;
-    gap: 20px; /* space between columns */
-}
-
-.statusColumn {
-    display: flex;
     flex-direction: column;
-    gap: 4px; /* space between lines in the same column */
+    gap: 4px; /* spacing between rows */
 }
 
-.systemWrapper {
+.statusRow {
     display: flex;
+    justify-content: space-between; /* left/right columns */
     align-items: center;
-    margin: 0;
-    padding: 2px 0;
 }
 
-.systemLabel {
-    margin-right: 6px;
+.statusLabel {
+    text-align: right;
+    min-width: 120px; /* adjust based on longest label */
+    margin-right: 10px;
     font-weight: bold;
 }
 
-.status i {
+.statusValue {
+    text-align: right;
+    min-width: 100px; /* adjust as needed */
+}
+
+.statusValue i {
     vertical-align: middle;
 }

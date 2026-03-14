@@ -1,53 +1,88 @@
-const NodeHelper = require("node_helper");
-const ping = require("ping");
-const axios = require("axios");
+Module.register("MMM-MyStatusCheck", {
 
-module.exports = NodeHelper.create({
+    defaults: {
+        systems: [
+            { host: "192.168.0.1", label: "Unify Router", type: "ping",
+              colors: { online: "green", offline: "red", checking: "orange" } 
+            },
+            { host: "192.168.0.10", label: "Synology NAS", type: "ping",
+              colors: { online: "green", offline: "red", checking: "orange" } 
+            },
+            { host: "192.168.0.100", label: "DHCP Server", type: "ping",
+              colors: { online: "green", offline: "red", checking: "orange" } 
+            },
+            { host: "http://www.tilburgs.com", label: "TILBURGS", type: "http",
+              colors: { online: "green", offline: "red", checking: "orange" } 
+            }
+        ],
+        interval: 15000,
+        showLatency: true,
+        showIcon: true
+    },
 
     start: function () {
-        console.log("MMM-MyStatusCheck helper started");
-    },
-
-    socketNotificationReceived: function (notification, config) {
-        if (notification === "CONFIG") {
-            this.config = config;
-            this.checkAll();
-            this.schedule();
-        }
-    },
-
-    schedule: function () {
-        setInterval(() => { this.checkAll(); }, this.config.interval);
-    },
-
-    checkAll: function () {
+        this.statuses = {};
         this.config.systems.forEach(system => {
-            if (system.type === "ping") this.pingHost(system.host);
-            else if (system.type === "http") this.httpCheck(system.host);
+            this.statuses[system.host] = { state: "checking", latency: null };
         });
+        this.sendSocketNotification("CONFIG", this.config);
     },
 
-    pingHost: function (host) {
-        const start = Date.now();
-        ping.promise.probe(host, { timeout: 3 })
-            .then(res => {
-                const latency = res.alive ? Date.now() - start : null;
-                this.sendSocketNotification("STATUS_RESULT", { host, alive: res.alive, latency });
-            })
-            .catch(() => {
-                this.sendSocketNotification("STATUS_RESULT", { host, alive: false, latency: null });
-            });
+    getStyles: function () {
+        return ["MMM-MyStatusCheck.css", "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"];
     },
 
-    httpCheck: async function (hostUrl) {
-        const start = Date.now();
-        try {
-            const res = await axios.get(hostUrl, { timeout: 5000 });
-            const latency = Date.now() - start;
-            const alive = res.status >= 200 && res.status < 400;
-            this.sendSocketNotification("STATUS_RESULT", { host: hostUrl, alive, latency });
-        } catch (e) {
-            this.sendSocketNotification("STATUS_RESULT", { host: hostUrl, alive: false, latency: null });
+    getDom: function () {
+        const wrapper = document.createElement("div");
+        wrapper.className = "statusContainer";
+
+        this.config.systems.forEach(system => {
+            const row = document.createElement("div");
+            row.className = "statusRow";
+
+            const s = this.statuses[system.host] || { state: "checking", latency: null };
+            const state = s.state || "checking";
+            const latency = (typeof s.latency === "number") ? s.latency : null;
+
+            // Left column: label
+            const labelDiv = document.createElement("div");
+            labelDiv.className = "statusLabel";
+            labelDiv.textContent = system.label || "";
+            row.appendChild(labelDiv);
+
+            // Middle column: icon (same for online/offline)
+            const iconDiv = document.createElement("div");
+            iconDiv.className = "statusIcon";
+            if (this.config.showIcon) {
+                let iconClass = "fas fa-server"; // same for online/offline
+                if (state === "checking") iconClass = "fas fa-spinner fa-spin";
+
+                iconDiv.innerHTML = `<i class="${iconClass}"></i>`;
+                const color = (system.colors && system.colors[state]) || "#ffffff";
+                const iconEl = iconDiv.querySelector("i");
+                if (iconEl) iconEl.style.color = color;
+            }
+            row.appendChild(iconDiv);
+
+            // Right column: latency
+            const latencyDiv = document.createElement("div");
+            latencyDiv.className = "statusLatency";
+            latencyDiv.textContent = (this.config.showLatency && latency !== null) ? `${latency}ms` : "-";
+            row.appendChild(latencyDiv);
+
+            wrapper.appendChild(row);
+        });
+
+        return wrapper;
+    },
+
+    socketNotificationReceived: function (notification, payload) {
+        if (notification === "STATUS_RESULT") {
+            this.statuses[payload.host] = {
+                state: payload.alive ? "online" : "offline",
+                latency: payload.latency
+            };
+            this.updateDom();
         }
     }
 

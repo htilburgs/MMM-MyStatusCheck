@@ -37,18 +37,10 @@ module.exports = NodeHelper.create({
         ping.promise.probe(host, { timeout: 3 })
             .then(res => {
                 const latency = res.alive ? Date.now() - start : null;
-                this.sendSocketNotification("STATUS_RESULT", {
-                    host,
-                    alive: res.alive,
-                    latency
-                });
+                this.sendSocketNotification("STATUS_RESULT", { host, alive: res.alive, latency });
             })
             .catch(() => {
-                this.sendSocketNotification("STATUS_RESULT", {
-                    host,
-                    alive: false,
-                    latency: null
-                });
+                this.sendSocketNotification("STATUS_RESULT", { host, alive: false, latency: null });
             });
     },
 
@@ -58,17 +50,9 @@ module.exports = NodeHelper.create({
             const res = await axios.get(hostUrl, { timeout: 5000 });
             const latency = Date.now() - start;
             const alive = res.status >= 200 && res.status < 400;
-            this.sendSocketNotification("STATUS_RESULT", {
-                host: hostUrl,
-                alive,
-                latency
-            });
+            this.sendSocketNotification("STATUS_RESULT", { host: hostUrl, alive, latency });
         } catch (e) {
-            this.sendSocketNotification("STATUS_RESULT", {
-                host: hostUrl,
-                alive: false,
-                latency: null
-            });
+            this.sendSocketNotification("STATUS_RESULT", { host: hostUrl, alive: false, latency: null });
         }
     }
 

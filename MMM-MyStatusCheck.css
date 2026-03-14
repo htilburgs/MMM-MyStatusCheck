@@ -19,7 +19,7 @@
 
 .statusValue {
     text-align: right;
-    min-width: 100px; /* adjust as needed */
+    min-width: 50px; /* adjust as needed */
 }
 
 .statusValue i {

@@ -24,6 +24,7 @@ module.exports = NodeHelper.create({
         this.config.systems.forEach(system => {
             if (system.type === "ping") this.pingHost(system.host);
             else if (system.type === "http") this.httpCheck(system.host);
+            else if (system.type === "person") this.pingPerson(system.host); // new person type
         });
     },
 
@@ -49,6 +50,19 @@ module.exports = NodeHelper.create({
         } catch (e) {
             this.sendSocketNotification("STATUS_RESULT", { host: hostUrl, alive: false, latency: null });
         }
+    },
+
+    pingPerson: function (host) {
+        // A "person" is checked by pinging their device (IP or host)
+        const start = Date.now();
+        ping.promise.probe(host, { timeout: 3 })
+            .then(res => {
+                const latency = res.alive ? Date.now() - start : null;
+                this.sendSocketNotification("STATUS_RESULT", { host, alive: res.alive, latency });
+            })
+            .catch(() => {
+                this.sendSocketNotification("STATUS_RESULT", { host, alive: false, latency: null });
+            });
     }
 
 });

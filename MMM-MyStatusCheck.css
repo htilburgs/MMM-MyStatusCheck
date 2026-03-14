@@ -8,12 +8,14 @@
     display: flex;
     justify-content: space-between; /* left/right columns */
     align-items: center;
+    line-height: normal;
 }
 
 .statusLabel {
     text-align: right;
     min-width: 120px; /* adjust based on longest label */
     margin-right: 10px;
+    color: lightgray;
     font-weight: bold;
 }
 

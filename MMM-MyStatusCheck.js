@@ -28,22 +28,19 @@ Module.register("MMM-MyStatusCheck", {
         const wrapper = document.createElement("div");
         wrapper.className = "statusContainer";
 
-        const mid = Math.ceil(this.config.systems.length / 2);
-        const leftCol = document.createElement("div");
-        leftCol.className = "statusColumn";
-        const rightCol = document.createElement("div");
-        rightCol.className = "statusColumn";
+        this.config.systems.forEach(system => {
+            const row = document.createElement("div");
+            row.className = "statusRow";
 
-        this.config.systems.forEach((system, index) => {
-            const systemWrapper = document.createElement("div");
-            systemWrapper.className = "systemWrapper";
+            // Left column: label
+            const label = document.createElement("div");
+            label.className = "statusLabel";
+            label.textContent = system.label || "";
+            row.appendChild(label);
 
-            const label = document.createElement("span");
-            label.className = "systemLabel";
-            label.textContent = system.label + ":";
-
-            const status = document.createElement("span");
-            status.className = "status";
+            // Right column: icon + latency
+            const status = document.createElement("div");
+            status.className = "statusValue";
 
             const s = this.statuses[system.host] || { state: "checking", latency: null };
             const state = s.state || "checking";
@@ -66,15 +63,10 @@ Module.register("MMM-MyStatusCheck", {
                 }
             }
 
-            systemWrapper.appendChild(label);
-            systemWrapper.appendChild(status);
-
-            if (index < mid) leftCol.appendChild(systemWrapper);
-            else rightCol.appendChild(systemWrapper);
+            row.appendChild(status);
+            wrapper.appendChild(row);
         });
 
-        wrapper.appendChild(leftCol);
-        wrapper.appendChild(rightCol);
         return wrapper;
     },
 

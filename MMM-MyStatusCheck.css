@@ -1,26 +1,20 @@
 .statusContainer {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    font-size: 20px;
+    gap: 4px; /* reduces space between each systemWrapper */
 }
 
 .systemWrapper {
     display: flex;
     align-items: center;
+    margin: 0;      /* remove extra margin */
+    padding: 2px 0; /* smaller vertical padding */
 }
 
 .systemLabel {
-    font-weight: bold;
-    margin-right: 5px;
+    margin-right: 6px; /* space between label and icon/text */
 }
 
 .status i {
-    font-size: 24px;
-}
-
-/* Spinner animation for checking icons */
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    vertical-align: middle;
 }

@@ -5,10 +5,12 @@
 }
 
 .systemWrapper {
-    display: flex;
+/*    display: flex;
+    padding: 2px 0; /* smaller vertical padding */
+  
     align-items: center;
     margin: 0;      /* remove extra margin */
-    padding: 2px 0; /* smaller vertical padding */
+
 }
 
 .systemLabel {

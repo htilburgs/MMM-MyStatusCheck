@@ -3,17 +3,17 @@
     flex-direction: column;
     gap: 4px; /* spacing between rows */
 }
-
+/*
 .statusRow {
     display: flex;
-    justify-content: space-between; /* left/right columns */
+    justify-content: space-between; 
     align-items: center;
     line-height: normal;
 }
 
 .statusLabel {
     text-align: right;
-    min-width: 120px; /* adjust based on longest label */
+    min-width: 120px;
     margin-right: 10px;
     color: lightgray;
     font-weight: bold;
@@ -21,9 +21,32 @@
 
 .statusValue {
     text-align: right;
-    min-width: 50px; /* adjust as needed */
+    min-width: 50px; 
 }
+*/
 
 .statusValue i {
     vertical-align: middle;
+}
+
+.statusRow {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr; /* left, middle, right */
+    align-items: center;
+}
+
+.statusLabel {
+    text-align: right;
+    padding-right: 10px;
+    color: lightgray;
+    font-weight: bold;
+}
+
+.statusIcon {
+    text-align: center;
+}
+
+.statusLatency {
+    text-align: right;
+    padding-left: 10px;
 }
